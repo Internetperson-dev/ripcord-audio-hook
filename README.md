@@ -9,8 +9,9 @@ Fixes Ripcord:
 ## Usage
 For `hook.so`, see [Building](#Building). I don't distribute binaries as I have no idea what the proper way to do it is on Linux.
 1. Extract the Ripcord AppImage. (`./Ripcord-0.4.29-x86_64.AppImage --appimage-extract`)
-2. Copy `hook.so` to the directory where the AppImage was extracted (should be `squashfs-root`).
-3. Run Ripcord using `LD_PRELOAD=./hook.so ./Ripcord`. You should now be able to connect to voice channels.  
+2. Extract the bundle `unzip ripcord-hook-bundle.zip`
+3. Copy `.so` files to the directory where the AppImage was extracted (should be `squashfs-root`).
+4. Run Ripcord using ` LD_LIBRARY_PATH=. LD_PRELOAD=./hook.so ./Ripcord`. You should now be able to connect to voice channels.  
 *If you get an error that looks something like "cannot open shared object file: No such file or directory" even after installing funchook, check your `LD_LIBRARY_PATH` or run `ldconfig`.*
 
 ## Building
