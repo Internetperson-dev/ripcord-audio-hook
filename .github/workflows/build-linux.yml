@@ -31,12 +31,13 @@ jobs:
           mkdir build && cd build
           cmake ..
           make -j$(nproc)
-          # copy shared lib next to repo root
+          # copy libs and headers into workspace root
           cp libfunchook.so* $GITHUB_WORKSPACE/
+          cp ../funchook.h $GITHUB_WORKSPACE/
 
       - name: Build hook.so
         run: |
-          gcc -shared -fPIC -o hook.so hook.c -ldl -L. -lfunchook
+          gcc -shared -fPIC -I. -o hook.so hook.c -ldl -L. -lfunchook
           ls -lh hook.so libfunchook.so*
 
       - name: Upload bundle artifact
