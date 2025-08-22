@@ -1,0 +1,41 @@
+name: Build hook.so (Linux)
+
+on:
+  push:
+    branches:
+      - linux
+  pull_request:
+    branches:
+      - linux
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            pkg-config \
+            git \
+            libfunchook-dev  # funchook is needed for hook.so
+
+      - name: Build hook.so
+        run: |
+          mkdir build && cd build
+          cmake ..
+          make -j$(nproc)
+          ls -lh
+
+      - name: Upload hook.so artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hook-library
+          path: build/hook.so
