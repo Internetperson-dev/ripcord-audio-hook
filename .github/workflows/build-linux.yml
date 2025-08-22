@@ -22,7 +22,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
-            cmake \
             pkg-config \
             git
 
@@ -38,13 +37,11 @@ jobs:
 
       - name: Build hook.so
         run: |
-          mkdir build && cd build
-          cmake ..
           make -j$(nproc)
-          ls -lh
+          ls -lh hook.so || echo "hook.so not found!"
 
       - name: Upload hook.so artifact
         uses: actions/upload-artifact@v4
         with:
           name: hook-library
-          path: build/hook.so
+          path: hook.so
