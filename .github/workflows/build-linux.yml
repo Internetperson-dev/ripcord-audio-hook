@@ -17,15 +17,24 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install build deps
+      - name: Install build dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
             build-essential \
             cmake \
             pkg-config \
-            git \
-            libfunchook-dev  # funchook is needed for hook.so
+            git
+
+      - name: Build and install funchook
+        run: |
+          git clone https://github.com/kubo/funchook.git
+          cd funchook
+          mkdir build && cd build
+          cmake ..
+          make -j$(nproc)
+          sudo make install
+          sudo ldconfig   # refresh shared library cache
 
       - name: Build hook.so
         run: |
