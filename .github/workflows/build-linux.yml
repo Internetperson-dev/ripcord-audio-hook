@@ -31,9 +31,10 @@ jobs:
           mkdir build && cd build
           cmake ..
           make -j$(nproc)
-          # copy libs and headers into workspace root
+          # copy shared libraries
           cp libfunchook.so* $GITHUB_WORKSPACE/
-          cp ../funchook.h $GITHUB_WORKSPACE/
+          # copy headers from include/
+          cp ../include/funchook.h $GITHUB_WORKSPACE/
 
       - name: Build hook.so
         run: |
