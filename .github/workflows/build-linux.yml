@@ -1,4 +1,4 @@
-name: Build hook.so (Linux)
+name: Build hook.so and bundle funchook
 
 on:
   push:
@@ -24,23 +24,25 @@ jobs:
             build-essential \
             git cmake pkg-config
 
-      - name: Build and install funchook
+      - name: Build funchook
         run: |
           git clone https://github.com/kubo/funchook.git
           cd funchook
           mkdir build && cd build
           cmake ..
           make -j$(nproc)
-          sudo make install
-          sudo ldconfig
+          # copy shared lib next to repo root
+          cp libfunchook.so* $GITHUB_WORKSPACE/
 
-      - name: Compile hook.so
+      - name: Build hook.so
         run: |
-          gcc -shared -fPIC -o hook.so hook.c -ldl -lfunchook
-          ls -lh hook.so
+          gcc -shared -fPIC -o hook.so hook.c -ldl -L. -lfunchook
+          ls -lh hook.so libfunchook.so*
 
-      - name: Upload hook.so artifact
+      - name: Upload bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: hook-library
-          path: hook.so
+          name: ripcord-hook-bundle
+          path: |
+            hook.so
+            libfunchook.so*
